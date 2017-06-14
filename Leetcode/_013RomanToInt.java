@@ -8,12 +8,6 @@
 
 package Leetcode;
 
-/**
- * Time: 17-6-14 下午10:01
- * Created by yaning on 17-6-14.
- * Email: wangyaning6166@gmail.com
- * School: HUST
- */
 public class _013RomanToInt {
     public static void main(String[] args) {
         Solution sol = new Solution();
