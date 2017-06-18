@@ -1,5 +1,5 @@
 #include<iostream>
-#include<cstdio>//使用C的标准输出，以免中间不够3位
+#include<cstdio>
 
 using namespace std;
 
@@ -13,12 +13,10 @@ int Print(char ch){
 
 int main(void)
 {
-	//定义题里的数据
 	int a = 0;
 	int b = 0;
 	cin >> a >> b;
 
-	//交给Output处理
 	Output(a + b);
 
 	return 0;
@@ -26,41 +24,39 @@ int main(void)
 
 void Output(int target)
 {
-	int count = 1;//定义位数
-	int test = target;//使用局部变量，避免对原数据改动
+	int count = 1;
+	int test = target;
 
-					  //判断正负，为下一步准备
 	if (test < 0)
 	{
 		cout << '-';
 		test = 0 - test;
-		target = test;//适当改动
-	}
+		target = test;	
+  }
 
-	//计算位数
 	while (test > 9)
 	{
 		++count;
 		test /= 10;
 	}
-	test = target;//恢复test的值
+	test = target;
 
 	if (count <= 3)
 	{
-		printf("%d\n", test);//直接输出，这里认为0是一位数，count = 1
+		printf("%d\n", test);
 	}
 	else if (count <= 6)
 	{
-		printf("%d,%03d\n", test / 1000, test % 1000);//标准输出即可
+		printf("%d,%03d\n", test / 1000, test % 1000);
 	}
 	else
 	{
-		printf("%d,", test / 1000000);//输出百万前的
-		test -= test / 1000000 * 1000000;//将百万以上的去掉
-		printf("%03d,%03d\n", test / 1000, test % 1000);//输出后面的
+		printf("%d,", test / 1000000);
+		test -= test / 1000000 * 1000000;
+		printf("%03d,%03d\n", test / 1000, test % 1000);
 	}
 
-	return;//主动退出，算是一个习惯吧
+	return;
 }
 
 /************************
