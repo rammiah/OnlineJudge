@@ -47,3 +47,5 @@
 *.iobj
 *.ipdb
 *.iml
+# my bash script
+count.sh
