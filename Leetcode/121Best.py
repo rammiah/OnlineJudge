@@ -13,4 +13,4 @@ class Solution(object):
             maxPro = max(x - minPri, maxPro)
             minPri = min(x, minPri)
         return maxPro
-        
+
