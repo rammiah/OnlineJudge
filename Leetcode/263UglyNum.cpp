@@ -3,6 +3,7 @@ public:
     bool isUgly(int num) {
         // 负数是不算是素数的
         if (num == 0) return false;
+        if (num <= 0) return false;
         if (num == 1) return true;
         while (num % 2 == 0) {
             num /= 2;
