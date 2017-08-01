@@ -1,25 +1,27 @@
 class Solution 
 {
-public:
-    void generate(vector<string> &strList, string str, int k, int length)
-    {
-        if(str.size() == length)
-        {
-            if(k==0) strList.push_back(str);
-            return;
+private:
+    void gene(vector<string> &sol, const string &str, int left, int right) {
+        if (left > 0) {
+            if (left > right) {
+                return;
+            }
+            gene(sol, str + "(", left - 1, right);
+            gene(sol, str + ")", left, right - 1);
+        } else if (left == 0) {
+            if (right == 0) {
+                sol.push_back(str);
+            } else if (right > 0){
+                gene(sol, str + ")", 0, right - 1);
+            }
         }
-        if(k>0)
-        {
-            generate(strList, str+')', k-1, length);
-        }
-        generate(strList, str+'(', k+1, length);
     }
-    
-    vector<string> generateParenthesis(int n) 
+public:
+    vector<string> generateParenthesis(int n)
     {
         vector<string> strList;
         string str;
-        generate(strList, str, 0, n*2);
+        gene(strList, str, n, n);
         return strList;
     }
 };
