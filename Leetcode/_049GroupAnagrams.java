@@ -38,12 +38,5 @@ class Solution {
         }
         return result;
     }
-
-    public static void main(String[] args) {
-        Solution sol = new Solution();
-        String[] strings = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        for (List<String> strs : sol.groupAnagrams(strings)) {
-            System.out.println(strs);
-        }
-    }
 }
+
