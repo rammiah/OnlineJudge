@@ -6,6 +6,9 @@ import java.util.Scanner;
 *
 * test case:
 * 20 1 8 4 13 6 10 15 2 17 3 19 7 16 8 11 14 9 12 5
+* result:
+Case 1:
+Maximum = 42, Minimum = 13, MaxIndex = 12, MinIndex = 2
 * */
 
 public class _03_07 {
