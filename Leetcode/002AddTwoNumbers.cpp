@@ -8,7 +8,7 @@
 struct ListNode {
      int val;
      ListNode *next;
-     ListNode(int x) : val(x), next(NULL) {}
+     ListNode(int x) : val(x), next(nullptr) { }
 };
 class Solution {
 public:
@@ -16,7 +16,7 @@ public:
         ListNode* result, *temp, *l = nullptr;
         int left = 0;
         bool first = true;
-        while (l1 != nullptr || l2 != nullptr || left != 0){
+        while (l1 != nullptr || l2 != nullptr || left != 0) {
             l = new ListNode(0);
             if (l1 != nullptr){
                 l->val += l1->val;
@@ -34,8 +34,8 @@ public:
                 first = false;
             }
             else{
-                temp->next = l;
-                temp = temp->next;
+                temp = temp->next = l;
+                // temp;
             }
         }
         return result;
