@@ -49,3 +49,5 @@
 *.iml
 # my bash script
 count.sh
+# .vscode
+.vscode
