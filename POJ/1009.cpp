@@ -1,129 +1,93 @@
-#include <cstdio>
-#include <cstdio>
+#include<cstdio>
+#include<algorithm>
 
-#define MAX(a,b) ((a) > (b) ? (a) : (b))
-#define ABS(a) ((a) < 0 ? (-a) : (a))
-// 10亿个数
-#define _MAX 1000000000
+#define size 1005
+using namespace std;
+struct pix {
+    int pos;    //表示答案中这个点的位置
+    int code;   //这个点上的答案值
+} outmap[size * 8];
 
-unsigned short pixels[_MAX];
+int inmap[size][2];//inmap[][0]表示这个连续段的数值，inmap[][1]表示这个连续段的长度
+int width, cntp, tot;
 
-unsigned short get_diff(const int &width, const int &index, const int &sum) {
-    static int up = 0, down = 0, left = 0, right = 0;
-    static int upleft = 0, upright = 0, downleft = 0, downright = 0;
-    up = index - width;
-    up = up < 0 ? index : up;
-    upleft = up % width == 0 || up == index ? index : up - 1;
-    upright = (up + 1) % width == 0 || up == index ? index : up + 1;
-    down = index + width;
-    down = down >= sum ? index : down;
-    downleft = down % width == 0 || down == index ? index : down - 1;
-    downright = (down + 1) % width == 0 || down == index ? index : down + 1;
-    
-    left = index % width == 0 ? index : index - 1;
-    right = (index + 1) % width == 0 ? index : index + 1;
+//排序比较函数，最后以pos升序排序
+int cmp(pix x, pix y) {
+    return x.pos < y.pos;
+}
 
-    int a = pixels[up], b = pixels[down], c = pixels[left], d = pixels[right];
-    int e = pixels[upleft], f = pixels[upright], g = pixels[downleft], h = pixels[downright];
-    int _this = pixels[index];
+//返回原图中pos位置上的数值
+int getnum(int pos) {
+    int p = 0, i = 0;
+    while (p < pos)
+        p += inmap[i++][1];
+    return inmap[i - 1][0];
+}
 
-    int max = 0;
-    max = MAX(ABS(a - _this), max);
-    max = MAX(ABS(b - _this), max);
-    max = MAX(ABS(c - _this), max);
-    max = MAX(ABS(d - _this), max);
-    max = MAX(ABS(e - _this), max);
-    max = MAX(ABS(f - _this), max);
-    max = MAX(ABS(g - _this), max);
-    max = MAX(ABS(h - _this), max);
-    return (unsigned short)max;
+//计算pos位置上的答案
+int getcode(int pos) {
+    int num = getnum(pos), ret = 0;
+
+    int row = (pos - 1) / width;//关于row和col的原理主程序中有
+    int col = (pos - 1) % width;
+
+    for (int i = row - 1; i <= row + 1; i++)
+        for (int j = col - 1; j <= col + 1; j++) {
+            int tpos = i * width + j;
+            if (i < 0 || j < 0 || j >= width || tpos >= tot || tpos == pos - 1)
+                continue;//这里计算差的绝对值时要排除pos自己
+
+            int tmp = getnum(tpos + 1);
+            if (abs(tmp - num) > ret)ret = abs(tmp - num);//更新ret
+        }
+    return ret;
 }
 
 int main() {
-    int width = 0;
-    while (scanf("%d", &width), width != 0) {
-        unsigned short num = 0;
-        int cnt = 0;
-        int pix_cnt = 0;
-        int sum = 0;
+    while (scanf("%d", &width) && width > 0) {
 
-        while (scanf("%hu %d", &num, &cnt), num != 0 && cnt != 0) {
-            sum += cnt;
-            for (int i = 0; i < cnt; ++i) {
-                pixels[pix_cnt++] = num;
-            }
+        int num, len;
+        cntp = tot = 0;//必须得每次都赋0
+        while (scanf("%d%d", &num, &len) && len > 0) {
+            inmap[cntp][0] = num;
+            inmap[cntp++][1] = len;
+            tot += len;//tot是map中像素的个数
+        }
+        printf("%d\n", width);//按照同样格式输出
+
+        int pos = 1, k = 0;//pos从1开始标号
+        // 枚举每一个连续段
+        for (int p = 0; p <= cntp; p++) {
+
+            int row = (pos - 1) / width;
+            int col = (pos - 1) % width;
+
+
+            for (int i = row - 1; i <= row + 1; i++)
+                for (int j = col - 1; j <= col + 1; j++) {
+                    int tpos = i * width + j;//这里算出来的tpos其实是tpos的标号减一
+                    if (i < 0 || j < 0 || j >= width || tpos >= tot)
+                        continue;//tpos在map的外面了
+
+                    outmap[k].pos = tpos + 1;
+                    outmap[k++].code = getcode(tpos + 1);//答案存入outmap
+                }
+
+            pos += inmap[p][1];//跳跃到下一个连续段的起始格
         }
 
+        sort(outmap, outmap + k, cmp);
 
-        cnt = 1;
-        int cur_diff = get_diff(width, 0, sum), temp_diff = 0;
-        printf("%d\n", width); 
-        for (int i = 1; i < sum; ++i) {
-            temp_diff = get_diff(width, i, sum);    
-            if (temp_diff == cur_diff) {
-                cnt++;
-            } else {
-                printf("%hu %d\n", cur_diff, cnt);
-                cnt = 1;
-                cur_diff = temp_diff;
-            }
+        pix tmp = outmap[0];
+        for (int i = 0; i < k; i++) {
+            if (outmap[i].code == tmp.code) //表明连续，则跳过不输出
+                continue;
+            printf("%d %d\n", tmp.code, outmap[i].pos - tmp.pos);
+            tmp = outmap[i];
         }
-        printf("%hu %d\n", cur_diff, cnt);
-        printf("0 0\n");
+        printf("%d %d\n", tmp.code, tot - tmp.pos + 1);//最后一部分
+        printf("0 0\n");//按照格式输出
     }
-    printf("0\n");
-
+    printf("0\n");//格式
     return 0;
 }
-
-/*
- Sample Input
-
-7
-15 4
-100 15
-25 2
-175 2
-25 5
-175 2
-25 5
-0 0
-10
-35 500000000
-200 500000000
-0 0
-3
-255 1
-10 1
-255 2
-10 1
-255 2
-10 1
-255 1
-0 0
-0
-Sample Output
-
-7
-85 5
-0 2
-85 5
-75 10
-150 2
-75 3
-0 2
-150 2
-0 4
-0 0
-10
-0 499999990
-165 20
-0 499999990
-0 0
-3
-245 9
-0 0
-0
-Hint
- 
- */
