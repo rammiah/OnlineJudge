@@ -6,16 +6,16 @@ const vector<string> ch2morse{".-","-...","-.-.","-..",".","..-.","--.","....","
 class Solution {
 public:
     int uniqueMorseRepresentations(vector<string>& words) {
-        map<string, bool> m;
+        set<string> str_set;
         string s;
         for (const auto &word : words) {
             s = "";
             for (const auto &ch : word) {
                 s.append(ch2morse[ch-'a']);
             }
-            m[s] = true;
+            str_set.insert(s);
         }
 
-        return m.size();
+        return str_set.size();
     }
 };
