@@ -1,3 +1,4 @@
+using ull = unsigned long long;
 
 class Solution {
 public:
@@ -6,12 +7,6 @@ public:
             return false;
         }
         ull length = A.length();
-        int a_nums[100], b_nums[100];
-        for (int i = 0; i < length; ++i) {
-            a_nums[i] = A[i];
-            b_nums[i] = B[i];
-        }
-
         // 旋转判断
         for (int i = 0; i < length; ++i) {
             bool same = true;
@@ -20,12 +15,12 @@ public:
                     same = false;
                 }
             }
-
+            // 相同返回true
             if (same) {
                 return true;
             }
         }
-
+        // 移位全部试探失败
         return false;
     }
 };
