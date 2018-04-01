@@ -1,33 +1,28 @@
-#include <vector>
-#include <iostream>
-#include <string>
-#include <cstring>
-using namespace std;
-
 class Solution {
-    bool match(const string &S, const string &word) {
-        if (S == word) {
+    bool match(const string &word, const string &S) {
+        // 偷懒
+        if (word == S) {
             return true;
         }
-        int w_len = word.length();
         int s_len = S.length();
-        // 长度关系必须满足s不比w长
-        char s_str[105] = {0};
-        strcpy(s_str, S.c_str());
-        char w_str[300] = {0};
+        int w_len = word.length();
+        // 放入长点的char数组防止报错
+        char w_str[105] = {0};
         strcpy(w_str, word.c_str());
+        char s_str[300] = {0};
+        strcpy(s_str, S.c_str());
         if (s_len > w_len) {
             return false;
         }
-        int w_idx = 0, s_idx = 0;
-        while (s_idx < s_len && w_idx < w_len) {
-            if (s_str[s_idx] != w_str[w_idx]) {
+        int s_idx = 0, w_idx = 0;
+        while (w_idx < w_len && s_idx < s_len) {
+            if (w_str[w_idx] != s_str[s_idx]) {
                 return false;
             } else {
                 // 此处只有一个字符
-                if (s_str[s_idx] != s_str[s_idx + 1]) {
+                if (w_str[w_idx] != w_str[w_idx + 1]) {
                     int len = 1;
-                    while (w_str[w_idx + len] == s_str[s_idx]) {
+                    while (s_str[s_idx + len] == w_str[w_idx]) {
                         // 找到不是的
                         // 记录有多长
                         ++len;
@@ -36,31 +31,33 @@ class Solution {
                     if (len == 2) {
                         return false;
                     }
-                    w_idx += len;
-                    // s向后移动
-                    ++s_idx;
+                    // s移动
+                    s_idx += len;
+                    // w向后移动
+                    ++w_idx;
                 } else {
                     // s有好几个字符相连
                     // 先记录长度
                     int len = 0;
-                    while (S[s_idx] == S[s_idx + len]) {
+                    while (word[w_idx] == word[w_idx + len]) {
                         len++;
                     }
-                    // 这个时候的word里面必须连续多个比S的长
+                    // 这个时候的S里面必须连续多个比word的长
                     for (int i = 0; i < len; ++i) {
-                        if (word[w_idx + i] != S[s_idx]) {
+                        if (S[s_idx + i] != word[w_idx]) {
                             return false;
                         }
                     }
-                    while (word[w_idx] == S[s_idx]) {
-                        ++w_idx;
+                    // S下标向后移动
+                    while (S[s_idx] == word[w_idx]) {
+                        ++s_idx;
                     }
-                    s_idx += len;
+                    w_idx += len;
                 }
             }
         }
-
-        return !(s_idx < s_len || w_idx < w_len);
+        // 都必须到尾部
+        return !(w_idx < w_len || s_idx < s_len);
 
     }
 public:
@@ -74,24 +71,4 @@ public:
 
         return cnt;
     }
-
 };
-
-int main() {
-    Solution sol;
-    std::vector<string> strs = {"hello", "hi", "helo"};
-    std::cout << sol.expressiveWords("hello", strs) << "\n";
-
-    return 0;
-}
-
-/*
-Example:
-Input: 
-S = "heeellooo"
-words = ["hello", "hi", "helo"]
-Output: 1
-Explanation: 
-We can extend "e" and "o" in the word "hello" to get "heeellooo".
-We can't extend "helo" to get "heeellooo" because the group "ll" is not extended.
-*/
