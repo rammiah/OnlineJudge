@@ -1,0 +1,19 @@
+                          ./+o+-       yaning@linux
+                  yyyyy- -yyyyyy+      OS: Ubuntu 16.04 xenial
+               ://+//////-yyyyyyo      Kernel: x86_64 Linux 4.4.0-116-generic
+           .++ .:/++++++/-.+sss/`      Uptime: 4d 20h 36m
+         .:++o:  /++++++++/:--:/-      Packages: 1259
+        o:+o+:++.`..```.-/oo+++++/     Shell: zsh 5.1.1
+       .:+o:+o/.          `+sssoo+/    CPU: Intel Xeon CPU E5-2682 v4 @ 2.494GHz
+  .++/+:+oo+o:`             /sssooo.   RAM: 434MiB / 2000MiB
+ /+++//+:`oo+o               /::--:.  
+ \+/+o+++`o++o               ++////.  
+  .++.o+++oo+:`             /dddhhh.  
+       .+.o+oo:.          `oddhhhh+   
+        \+.++o+o``-````.:ohdhhhhh+    
+         `:o+++ `ohhhhhhhhyo++os:     
+           .o:`.syhhhhhhh/.oo++o`     
+               /osyyyyyyo++ooo+++/    
+                   ````` +oo+++o\:    
+                          `oo++.   
+                          
