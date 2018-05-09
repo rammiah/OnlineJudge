@@ -1,76 +1,41 @@
-#include<iostream>
 #include<cstdio>
+#include <stack>
 
 using namespace std;
-
-void Output(int target);
-
-int Print(char ch){
-	int r = 0;
-	r = ch - '0';
-	return r;
-}
 
 int main(void)
 {
 	int a = 0;
 	int b = 0;
-	cin >> a >> b;
-
-	Output(a + b);
-
+	scanf("%d %d", &a, &b);
+	a += b;
+	if (a < 0) {
+		printf("-");
+		a = -a;
+	}
+	stack<int> s;
+	// 和是0的话就很难过了
+	if (a == 0) {
+		s.push(a);
+	}
+	while (a > 0) {
+		s.push(a % 1000);
+		a /= 1000;
+	}
+	// 只有一个数字的话就很难过了
+	if (s.size() > 1) {
+		printf("%d,", s.top());
+		s.pop();
+		while (s.size() > 1) {
+			printf("%03d,", s.top());
+			s.pop();
+		}
+		printf("%03d", s.top());
+	} else {
+		// 只有一个数字
+		printf("%d\n", s.top());
+	}
+	
+		
 	return 0;
 }
-
-void Output(int target)
-{
-	int count = 1;
-	int test = target;
-
-	if (test < 0)
-	{
-		cout << '-';
-		test = 0 - test;
-		target = test;	
-  }
-
-	while (test > 9)
-	{
-		++count;
-		test /= 10;
-	}
-	test = target;
-
-	if (count <= 3)
-	{
-		printf("%d\n", test);
-	}
-	else if (count <= 6)
-	{
-		printf("%d,%03d\n", test / 1000, test % 1000);
-	}
-	else
-	{
-		printf("%d,", test / 1000000);
-		test -= test / 1000000 * 1000000;
-		printf("%03d,%03d\n", test / 1000, test % 1000);
-	}
-
-	return;
-}
-
-/************************
-Calculate a + b and output the sum in standard format.
-that is, the digits must be separated into groups of three by commas (unless there are less than four digits).
-Input
-Each input file contains one test case. 
-Each case contains a pair of integers a and b where -1000000 <= a, b <= 1000000. 
-The numbers are separated by a space.
-Output
-For each test case, you should output the sum of a and b in one line. 
-The sum must be written in the standard format.
-Sample Input
--1000000 9
-Sample Output
--999,991
-*************************/
