@@ -1,89 +1,133 @@
-/*************************************************************************
-	> File Name: 1016PhoneBills.cpp
-	> Author: Yaning Wang, CS1607
-	> Mail: wangyanign6166@gmail.com
-	> School: HUST
-	> Created Time: 2017年05月04日 星期四 13时20分45秒
- ************************************************************************/
-#include<cstdio>
-#include<set>
-#include<vector>
-#include<stack>
-struct Time{
-    int start;
-    int end;
-};
-struct People{
-    char name[21];
-    std::stack<Time> time;
-    int costs;
-};
+#include <cstdio>
+#include <set>
+#include <string>
+#include <map>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
 int rate[24];
-std::set<People>people;
-void Input(std::vector<People>&peo, const int N){
-    People temp;
-    Time time;
-    for (int i = 0; i < N; ++i){
-        scanf("%s %d %d %d %d %s-line", temp.name, time.start);
-        // if (people.find())
+struct Record{
+    int day, hour, min;
+    Record(int day, int hour, int min):day(day), hour(hour), min(min){}
+    friend bool operator<(const Record &a, const Record &b) {
+        return a.day * 1440 + a.hour * 60 + a.min < b.day * 1440 + b.hour * 60 + b.min ;
     }
+
+    friend int operator-(const Record &a, const Record &b) {
+        return a.day * 1440 + a.hour * 60 + a.min - b.day * 1440 + b.hour * 60 + b.min;
+    }
+};
+
+struct User{
+    string name;
+    vector<Record> on;
+    vector<Record> off;
+    friend bool operator<(const User &a, const User &b) {
+        return a.name < b.name;
+    }
+};
+
+double calcu_cost(const Record &start, const Record &end) {
+    // 计算费用啊
+    // 判断是否跨天了
+    double cost = 0;
+    if (start.day == end.day) {
+        // 没有跨天
+        int hour = start.hour;
+        cost += rate[hour] * (60 - start.min);
+        ++hour;
+        while (hour < end.hour) {
+            cost += rate[hour % 24] * 60;
+            hour++;
+        }
+        cost += rate[end.hour] * end.min;
+    } else {
+        // 跨天了，问题是有可能跨好几天。。。
+        int cross_days = end.day - start.day - 1;
+        for (int i = 0; i < 24; ++i) {
+            cost += rate[i] * 60 * cross_days;
+        }
+        // 计算只跨一次00:00的费用
+        int hour = start.hour - 24;
+        cost += rate[(hour + 24) % 24] * (60 - start.min);
+        while (hour < end.hour) {
+            cost += rate[(hour + 24) % 24] * 60;
+            ++hour;
+        }
+        cost += rate[end.hour] * end.min;
+    }
+    // 转换为美元
+    return cost / 100;
 }
 
-int main(void){
-    for (int i = 0; i < 24; ++i)scanf("%d", &rate[i]);
-    int N = 0;
-    scanf("%d", &N);
-    std::vector<People> peos;
+int main() {
+    // 获取费率
+    for (int i = 0; i < 24; ++i) {
+        scanf("%d", &rate[i]);
+    }
+    int cnt;
+    scanf("%d", &cnt);
+    set<string> users;
+    char name[25];
+    char on_off[5];
+    string s;
+    int month, day, hour, min;
+    map<string, User>m;
+
+    while (cnt--) {
+        scanf("%s %d:%d:%d:%d %s-line", name, &month, &day, &hour, &min, on_off);
+        s = name;
+        // 未记录此用户
+        if (users.find(s) != users.end()) {
+            users.insert(s);
+        } else {
+            if (on_off[1] == 'n') {
+                m[s].on.emplace_back(day, hour, min);
+            } else {
+                m[s].off.emplace_back(day, hour, min);
+            }
+        }
+    }
+    // 开始算帐单，一个一个用户的输出
+    // 遍历map
+    for (auto &u : m) {
+        printf("%s %02d\n", u.first.c_str(), month);        
+        auto &on = u.second.on;
+        auto &off = u.second.off;
+        // 要不先把on和off先排序
+        sort(on.begin(), on.end());
+        sort(off.begin(), off.end());
+        double total = 0;
+        double once = 0;
+        int on_size = on.size(), off_size = off.size();
+        int off_idx = 0;
+        for (int i = 0; i < on_size; ++i) {
+            if (off[off_size - 1] < on[i]) {
+                // 不可能, 而且接着的后面的也不能了
+                break;
+            }
+            // 寻找可用的下线时间
+            for (; off_idx < off_size; ++off_idx) {
+                if (on[i] < off[off_idx]) {
+                    // 第一个就是，赶紧计算值并删除记录
+                    once = calcu_cost(on[i], off[off_idx]);
+                    // 输出并停止迭代
+                    // 可能还需要重载一下减号
+                    printf("%02d %02d %02d %02d %02d %02d %d $%.2f\n", 
+                    on[i].day, on[i].hour, on[i].min, off[off_idx].day,
+                     off[off_idx].hour, off[off_idx].min, off[off_idx] - on[i], once);
+                    total += once;
+                    //
+                    break;
+                }
+            }
+        }
+        // 输出总数
+        printf("Total amount: $%.2f\n", total);
+    }
 
 
     return 0;
 }
-/*
- A long-distance telephone company charges its customers by the following rules:
-Making a long-distance call costs a certain amount per minute, depending on the time of day when the call is made. 
-when a customer starts connecting a long-distance call, the time will be recorded, and so will be the time when the 
-customer hangs up the phone. Every calendar month, a bill is sent to the customer for each minute called 
-(at a rate determined by the time of day). Your job is to prepare the bills for each month, given a set of phone call records.
-Input Specification:
-Each input file contains one test case. Each case has two parts: the rate structure, and the phone call records.
-The rate structure consists of a line with 24 non-negative integers denoting the toll (cents/minute) from 00:00 - 01:00, 
-the toll from 01:00 - 02:00, and so on for each hour in the day.
-The next line contains a positive number N (<= 1000), followed by N lines of records. Each phone call record consists 
-of the name of the customer (string of up to 20 characters without space), the time and date (mm:dd:hh:mm), and the word "on-line" or "off-line".
-For each test case, all dates will be within a single month. Each "on-line" record is paired with the chronologically 
-next record for the same customer provided it is an "off-line" record. Any "on-line" records that are not paired 
-with an "off-line" record are ignored, as are "off-line" records not paired with an "on-line" record. 
-It is guaranteed that at least one call is well paired in the input. You may assume that no two records 
-for the same customer have the same time. Times are recorded using a 24-hour clock.
-Output Specification:
-For each test case, you must print a phone bill for each customer.
-Bills must be printed in alphabetical order of customers' names. For each customer, first print 
-in a line the name of the customer and the month of the bill in the format shown by the sample. 
-Then for each time period of a call, print in one line the beginning and ending time and date (dd:hh:mm), 
-the lasting time (in minute) and the charge of the call. The calls must be listed in chronological order.
-Finally, print the total charge for the month in the format shown by the sample.
-Sample Input:
-10 10 10 10 10 10 20 20 20 15 15 15 15 15 15 15 20 30 20 15 15 10 10 10
-10
-CYLL 01:01:06:01 on-line
-CYLL 01:28:16:05 off-line
-CYJJ 01:01:07:00 off-line
-CYLL 01:01:08:03 off-line
-CYJJ 01:01:05:59 on-line
-aaa 01:01:01:03 on-line
-aaa 01:02:00:01 on-line
-CYLL 01:28:15:41 on-line
-aaa 01:05:02:24 on-line
-aaa 01:04:23:59 off-line
-Sample Output:
-CYJJ 01
-01:05:59 01:07:00 61 $12.10
-Total amount: $12.10
-CYLL 01
-01:06:01 01:08:03 122 $24.40
-28:15:41 28:16:05 24 $3.85
-Total amount: $28.25
-aaa 01
-02:00:01 04:23:59 4318 $638.80
-Total amount: $638.80 
- */ 
