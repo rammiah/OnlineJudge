@@ -25,7 +25,7 @@ int main() {
             if (value == 0) {
                 printf("Game Over.\n");
                 break;
-        }
+            }
         }
     }
 
