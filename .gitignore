@@ -51,3 +51,4 @@
 count.sh
 # .vscode
 .vscode
+*.txt
