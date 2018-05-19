@@ -11,7 +11,7 @@
 using namespace std;
 
 string intToRoman(int num) {
-    char* c[4][10]={
+    string c[4][10]={
             {"","I","II","III","IV","V","VI","VII","VIII","IX"},
             {"","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"},
             {"","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"},
@@ -27,7 +27,10 @@ string intToRoman(int num) {
 }
 
 int main() {
-    cout << intToRoman(3999) << endl;
+    int num;
+    std::cout << "Enter a decimal number: ";
+    std::cin >> num;
+    cout << intToRoman(num) << endl;
 
     return 0;
 }
