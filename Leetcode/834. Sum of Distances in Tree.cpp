@@ -17,6 +17,7 @@ int N, szDown[MAXN], sumDown[MAXN];
 map<int,int> ansMap;
 VI adj[MAXN];
 PII dfsDown(int x, int p) {
+  // 子节点个数，子孙节点个数
   int szdown = 0, sumdown = 0;
   REP(i,0,adj[x].size()) {
     int y = adj[x][i];
@@ -35,7 +36,7 @@ PII dfsDown(int x, int p) {
 void dfsAns(int x, int p, int szTop, int sumTop) {
   ansMap[x] = sumTop + szTop + sumDown[x];
   REP(i,0,adj[x].size()) {
-    int y  = adj[x][i];
+    int y = adj[x][i];
     if (y == p) continue;
     int sz = szDown[0] - szDown[y];
     int sum = sumTop + szTop + (sumDown[x] - sumDown[y] - szDown[y]);

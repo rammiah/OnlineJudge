@@ -16,9 +16,9 @@ public:
         long ans=0;
         int len = str.length();
         int neg=1;
-            int i=0;
-            while(str[i]==' ')
-                i++;
+        int i=0;
+        while(str[i]==' ')
+            i++;
         if(str[i]=='-')
         {
             i++;

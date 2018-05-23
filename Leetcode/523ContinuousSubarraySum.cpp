@@ -14,7 +14,6 @@ public:
 		{
 			runningSum += nums[i];
 			runningSum %= k;
-			
 		}
 	}
 };

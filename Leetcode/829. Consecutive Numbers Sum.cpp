@@ -6,11 +6,11 @@ public:
 			if (i * (i + 1) > 2 * num) {
 				break;
 			}
-			long long a = num - (i + 1) * i / 2;
+			long long as = num - (i + 1) * i / 2;
 			// 不能整除继续
-			if (a % (i + 1) != 0)continue;
+			if (as % (i + 1) != 0)continue;
 			// 开始的数字大于0
-			if (a / (i + 1) > 0){
+			if (as / (i + 1) > 0){
 				++result;
 			} 
 		}

@@ -1,5 +1,5 @@
-# Write your MySQL query statement below
-# 一句简单的SQL语句
+-- Write your MySQL query statement below
+-- 一句简单的SQL语句
 SELECT FirstName, LastName, City, State
 FROM Person LEFT JOIN Address 
 ON Person.PersonID = Address.PersonID;
