@@ -20,7 +20,6 @@ int main() {
     scanf("%d", &T);
     Node n;
     while (T--) {
-        set<int> ss;
         int cnt;
         scanf("%d", &cnt);
         for (int i = 0; i < cnt; ++i) {
