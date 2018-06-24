@@ -14,9 +14,9 @@ public:
     int mirrorReflection(int p, int q) {
         ll a = 0, b = 0;
         // 最大公约数
-        ll g = gcd(p, q);
-        a = p / g;
-        b = q / g;
+        ll g = p * q / gcd(p, q);
+        a = g / p;
+        b = g / p;
         if (a % 2 == 1 && b % 2 == 0) {
             return 0;
         }
