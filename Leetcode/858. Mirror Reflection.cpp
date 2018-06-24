@@ -8,22 +8,23 @@ ll gcd(ll a, ll b) {
     }
     return a;
 }
-
+// https://blog.csdn.net/qq2667126427/article/details/80793913
+// 配合blog更易懂
 class Solution {
 public:
     int mirrorReflection(int p, int q) {
-        ll a = 0, b = 0;
-        // 最大公约数
+        ll x = 0, y = 0;
+        // 最小公倍数
         ll g = p * q / gcd(p, q);
-        a = g / p;
-        b = g / p;
-        if (a % 2 == 1 && b % 2 == 0) {
+        y = g / p;
+        x = g / q;
+        if (x % 2 == 1 && y % 2 == 0) {
             return 0;
         }
-        else if (a % 2 == 1 && b % 2 == 1) {
+        else if (x % 2 == 1 && y % 2 == 1) {
             return 1;
         }
-        else if (a % 2 == 0 && b % 2 == 1) {
+        else if (x % 2 == 0 && y % 2 == 1) {
             return 2;
         }
         return 0;
