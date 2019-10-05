@@ -1,9 +1,5 @@
 class Solution {
 private:
-    enum Rela {
-        And, Or, Not, None
-    };
-
     static std::vector<std::string> split_by_comma(const std::string &exp) {
         // 将字符串使用逗号分割
         // 表达式是被括号包着的
@@ -45,7 +41,6 @@ public:
             return exp[0] == 't';
         }
         // 再长就是普通的表达式了
-        Rela rela;
         // 获取子表达式
         std::vector<std::string> sub_exps = split_by_comma(exp.substr(1));
         std::vector<bool> exp_bools;
@@ -68,7 +63,6 @@ public:
                 break;
             case '!':
                 // 非
-                // assert(sub_exps.size() == 1);
                 res = !parseBoolExpr(sub_exps[0]);
                 break;
         }
