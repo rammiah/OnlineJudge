@@ -46,7 +46,7 @@ func countSubTrees(n int, edges [][]int, labels string) []int {
 			// 遍历过于耗时，考虑如何优化掉
 			// 子节点有的直接使用
 			m = nums[childs[n][0]]
-			m[labels[n]]++
+			m[label]++
 			if len(childs[n]) > 1 {
 				for _, child := range childs[n][1:] {
 					for b, c := range nums[child] {
